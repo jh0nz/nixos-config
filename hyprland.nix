@@ -63,7 +63,13 @@
         "$mod, W, killactive"
         "$mod, M, exit"
         "$mod, Space, exec, rofi -show drun"
-        "$mod, Return, exec, ghostty"	
+        "$mod, Return, exec, ghostty"
+
+	"$mod, left, movefocus, l"
+	"$mod, right, movefocus, r"
+	"$mod, up, movefocus, u"
+	"$mod, down, movefocus, d"
+
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
