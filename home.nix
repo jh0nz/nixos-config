@@ -3,6 +3,7 @@
 {
   imports = [
     ./hyprland.nix
+    ./hypridle.nix
   ];
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
@@ -11,6 +12,8 @@
 		ghostty
 		rofi
 		hyprpaper
+		hypridle
+		hyprlock
 		inputs.thorium.packages.${pkgs.stdenv.hostPlatform.system}.thorium-avx2
 		pkgs-master.opencode
 		mako
@@ -29,7 +32,7 @@
 		enable = true;
 		shellAliases = {
 			update  = "sudo nixos-rebuild switch";
-			garbage = "nix-collect-garbage -d";
+			garbage = "sudo nix-collect-garbage -d";
 		};
 	};
 	programs.git = {
