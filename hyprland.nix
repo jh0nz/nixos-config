@@ -88,6 +88,8 @@
 
         "$mod, B, exec, thorium"
         "$mod SHIFT, R, exec, pkill waybar || waybar"
+        "$mod, mouse_down, workspace, e+1"
+        "$mod, mouse_up, workspace, e-1"
       ];
       bindm = [
         "$mod, mouse:272, movewindow"
