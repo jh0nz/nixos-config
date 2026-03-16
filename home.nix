@@ -29,6 +29,7 @@
 		enable = true;
 		shellAliases = {
 			update  = "sudo nixos-rebuild switch";
+			garbage = "nix-collect-garbage -d";
 		};
 	};
 	programs.git = {
