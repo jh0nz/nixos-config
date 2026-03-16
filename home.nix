@@ -22,6 +22,7 @@
 		pkgs-master.parsec-bin
 		pkgs-master.firefox
 		pkgs-master.gh
+		pkgs-master.lazygit
   	];
 
   programs.bash = {
