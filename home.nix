@@ -27,7 +27,7 @@
   programs.bash = {
 		enable = true;
 		shellAliases = {
-			update  = "sudo nixos-rebuild switch --flake /etc/nixos#nixos";
+			update  = "sudo nixos-rebuild switch";
 		};
 	};
 
