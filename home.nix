@@ -30,25 +30,14 @@
 			update  = "sudo nixos-rebuild switch";
 		};
 	};
-
-  programs.git = {
-    enable = true;
-    settings = {
-	init.defaultBranch = "main";
-	user.name = "jh0nz";
-	user.email = "jhondeycraft776@gmail.com";
-    };
-    ignores = [
-      "*~"
-      "*.swp"
-      ".DS_Store"
-      "*.log"
-      "node_modules"
-      ".env"
-      "dist"
-      "build"
-    ];
-  };
+	programs.git = {
+    		enable = true;
+    		settings = {
+			init.defaultBranch = "main";
+			user.name = "jh0nz";
+			user.email = "jhondeycraft776@gmail.com";
+    		};
+	};
 
 	services.syncthing = {
 		enable = true;
