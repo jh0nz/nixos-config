@@ -1,12 +1,9 @@
 { config, pkgs, inputs, pkgs-unstable, pkgs-master, ...}:
 
-  # let
-  #   lightpanda = import ./lightpanda.nix { inherit pkgs; };
-  # in 
+{
   imports = [
     ./hyprland.nix
   ];
-{
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
