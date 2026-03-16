@@ -33,18 +33,10 @@
 
   programs.git = {
     enable = true;
-    userName = "jh0nz";
-    userEmail = "jhondeycraft776@gmail.com";
-    signing = {
-      key = null;
-      signByDefault = false;
-    };
     settings = {
-      init.defaultBranch = "main";
-      core.autocrlf = "input";
-      # SSH signing example (uncomment to use):
-      # gpg.format = "ssh";
-      # user.signingkey = "~/.ssh/id_ed25519.pub";
+	init.defaultBranch = "main";
+	user.name = "jh0nz";
+	user.email = "jhondeycraft776@gmail.com";
     };
     ignores = [
       "*~"
