@@ -13,8 +13,8 @@
       ];
       exec-once = [
         "waybar"
-        "hyprpaper"
         "mako"
+	"hypridle"
       ];
 
       input = {

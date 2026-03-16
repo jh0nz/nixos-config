@@ -1,5 +1,10 @@
 { config, pkgs, inputs, pkgs-unstable, pkgs-master, ...}:
-
+let
+  miWallpaper = pkgs.fetchurl {
+    url = "https://w.wallhaven.cc/full/8g/wallhaven-8gkdy2.jpg";
+    hash = "sha256-N+o/0Fuzxx259N/aCVFA9e7lyiEe78qP2LJC1aYvrxc=";
+  };
+in
 {
   imports = [
     ./hyprland.nix
@@ -23,11 +28,23 @@
 		pkgs-master.vesktop
 		pkgs-master.wiremix
 		pkgs-master.parsec-bin
-		pkgs-master.firefox
 		pkgs-master.gh
 		pkgs-master.lazygit
   	];
-
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      ipc = "on";
+      splash = false;
+      # Usamos la ruta directa del store de Nix
+      preload = [ "${miWallpaper}" ];
+      wallpaper = [
+        # El primer parámetro es tu monitor (ej: eDP-1, HDMI-A-1)
+        # Si no sabes cuál es, usa una cadena vacía "" para todos
+        ", ${miWallpaper}"
+      ];
+    };
+  };
   programs.bash = {
 		enable = true;
 		shellAliases = {
