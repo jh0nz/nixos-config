@@ -14,7 +14,8 @@ in
     ];
   #hardware
   hardware.graphics.enable = true;
-  
+  services.zerotierone.enable = true;
+  services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -125,6 +126,7 @@ in
 	git
 	brightnessctl
 	fastfetch
+	zerotierone
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
