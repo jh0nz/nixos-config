@@ -31,6 +31,8 @@ in
 		pkgs-master.gh
 		pkgs-master.lazygit
 		pkgs-master.nodejs_24
+		python3
+		pkgs-master.vscode
   	];
   services.hyprpaper = {
     enable = true;

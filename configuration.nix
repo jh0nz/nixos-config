@@ -106,14 +106,14 @@ virtualisation.docker.enable = true;
   users.users.jhon = {
     isNormalUser = true;
     description = "jhon";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" "kvm" ];
     packages = with pkgs; [];
   };
 
   users.users.greeter = {
 	isSystemUser = true;
 	group = "greeter";
-	extraGroups = ["video" "docker" ]; 
+	extraGroups = ["video" ]; 
   };
 
   # Allow unfree packages
@@ -127,6 +127,7 @@ virtualisation.docker.enable = true;
 	brightnessctl
 	fastfetch
 	zerotierone
+	android-tools
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
