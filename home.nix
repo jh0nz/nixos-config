@@ -30,6 +30,7 @@ in
 		pkgs-master.parsec-bin
 		pkgs-master.gh
 		pkgs-master.lazygit
+		pkgs-master.nodejs_24
   	];
   services.hyprpaper = {
     enable = true;
