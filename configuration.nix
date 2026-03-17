@@ -24,7 +24,7 @@ in
   };
 	services.power-profiles-daemon.enable = true; 
   services.xserver.videoDrivers = ["nvidia"];
-
+virtualisation.docker.enable = true;
 	hardware.nvidia = {
 		open = true;
 		modesetting.enable = true;
@@ -113,7 +113,7 @@ in
   users.users.greeter = {
 	isSystemUser = true;
 	group = "greeter";
-	extraGroups = ["video" ]; 
+	extraGroups = ["video" "docker" ]; 
   };
 
   # Allow unfree packages
