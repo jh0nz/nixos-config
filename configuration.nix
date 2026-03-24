@@ -33,7 +33,12 @@ virtualisation.docker.enable = true;
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-	
+ programs.nix-ld.enable = true;
+ programs.nix-ld.libraries = with pkgs; [
+   stdenv.cc.cc
+   zlib
+   # Agrega aquí otras librerías si ldd indica que faltan
+ ];	
 	programs.hyprland.enable = true;
 
   # Use linux kernel 6.18 from unstable.
@@ -120,14 +125,16 @@ virtualisation.docker.enable = true;
   nixpkgs.config.allowUnfree = true;
   # List packages installed in system profile. To search, run:
   # $ nix search wget
+  
   environment.systemPackages = with pkgs; [
-	neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+  neovim
 	wget
 	git
 	brightnessctl
 	fastfetch
 	zerotierone
 	android-tools
+	ngrok
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -151,7 +158,15 @@ virtualisation.docker.enable = true;
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
+networking.firewall = {
+  enable = true;
+  # Abre el puerto del servidor interno de IntelliJ
+  allowedTCPPorts = [ 63342 ];
+  # Si es para emparejar Android, a veces necesitas un rango
+  allowedTCPPortRanges = [
+    { from = 5555; to = 5585; }
+  ];
+};
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

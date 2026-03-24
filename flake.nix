@@ -10,8 +10,9 @@
 		thorium.url = "github:Rishabh5321/thorium_flake";
 		nixpkgs-master.url = "github:nixos/nixpkgs/master";
 		nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+		nvf.url = "github:notashelf/nvf";
 };
-  	outputs = {self, nixpkgs, home-manager, hyprland,...}@inputs:{
+  	outputs = {self, nixpkgs, home-manager, hyprland, nvf, ...}@inputs: {
  		pkgs-unstable = import inputs.nixpkgs-unstable {
  			system = "x86_64-linux";
  			config.allowUnfree = true;
@@ -20,7 +21,8 @@
 			system = "x86_64-linux";
 			config.allowUnfree = true;
 		};
- 		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+		
+  		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
  			system = "x86_64-linux";
  			specialArgs = { 
 				inherit inputs;
@@ -40,7 +42,9 @@
 						pkgs-master = self.pkgs-master;
  					};
  				}
- 			];
+			nvf.nixosModules.default
+			./nvf-configuration.nix
+		];
  		};
  	};
  }
