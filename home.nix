@@ -33,6 +33,7 @@ in
 		pkgs-master.nodejs_24
 		python3
 		pkgs-master.vscode
+		pkgs-master.dbeaver-bin
   	];
   services.hyprpaper = {
     enable = true;
@@ -48,6 +49,11 @@ in
       ];
     };
   };
+  dconf.settings = {
+  "org/gnome/desktop/interface" = {
+    color-scheme = "prefer-dark";
+  };
+};
   programs.bash = {
 		enable = true;
 		shellAliases = {
