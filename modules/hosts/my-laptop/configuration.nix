@@ -2,15 +2,18 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, libs, pkgs, inputs, pkgs-unstable, ... }:
+{ self, inputs, ... }: {
+ flake.nixosModules.myMachineConfiguration= { config, lib, pkgs, pkgs-master, pkgs-unstable,...}:
 let
 	username = "jhon";
-	hyprlandCmd = "${pkgs.hyprland}/bin/Hyprland";
+	# hyprlandCmd = "${pkgs-master.hyprland}/bin/Hyprland";
 in
+
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [
+      self.nixosModules.myMachineHardware
+      self.nixosModules.niri
     ];
   #hardware
   hardware.graphics.enable = true;
@@ -39,18 +42,21 @@ virtualisation.docker.enable = true;
    zlib
    # Agrega aquí otras librerías si ldd indica que faltan
  ];	
-	programs.hyprland.enable = true;
+	# programs.hyprland = {
+	# 	enable = true;
+	# 	package = pkgs-master.hyprland;
+	# };
 
   # Use linux kernel 6.18 from unstable.
   boot.kernelPackages = pkgs-unstable.linuxPackages_6_18;
  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-	nix.settings = {
-		substituters = ["https://hyprland.cachix.org"];
-		trusted-substituters = ["https://hyprland.cachix.org"];
-		trusted-public-keys = ["hyprland.cachix.org-a:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-	};
+	# nix.settings = {
+	# 	substituters = ["https://hyprland.cachix.org"];
+	# 	trusted-substituters = ["https://hyprland.cachix.org"];
+	# 	trusted-public-keys = ["hyprland.cachix.org-a:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+	# };
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -66,11 +72,11 @@ virtualisation.docker.enable = true;
 		restart = false;
 		settings = {
 			initial_session = {
-				command = hyprlandCmd;
+				command = "${config.programs.niri.package}/bin/niri --session";
 				user = username;
 			};
 			default_session = {
-				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd sway";
+				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri --session";
 				user = "greeter";
 			};
 		};
@@ -175,4 +181,5 @@ networking.firewall = {
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
 
+};
 }

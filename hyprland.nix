@@ -9,7 +9,8 @@
     settings = {
       "$mod" = "SUPER";
       monitor = [
-        "eDP-1, preferred, auto,1"
+        "eDP-1, 1920x1080@60,0x0,1"
+        # "HDMI-A-1, 1920x1080@75, 0x0, 1"
       ];
       exec-once = [
         "waybar"
@@ -63,7 +64,7 @@
         "$mod, W, killactive"
         "$mod, M, exit"
         "$mod, Space, exec, rofi -show drun"
-        "$mod, Return, exec, ghostty"
+        "$mod, Return, exec, ghostty --gtk-single-instance=true"
 
 	"$mod, left, movefocus, l"
 	"$mod, right, movefocus, r"

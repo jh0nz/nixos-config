@@ -2,6 +2,14 @@
 	description = "nixos config hyprland";
 	inputs = {
 		nixpkgs.url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
+                flake-parts.url = "github:hercules-ci/flake-parts";
+                import-tree.url = "github:vic/import-tree";
+
+		wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+		noctalia = {
+			url = "github:noctalia-dev/noctalia-shell";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 		home-manager = {
 			url = "github:nix-community/home-manager/release-25.11";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -12,39 +20,42 @@
 		nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 		nvf.url = "github:notashelf/nvf";
 };
-  	outputs = {self, nixpkgs, home-manager, hyprland, nvf, ...}@inputs: {
- 		pkgs-unstable = import inputs.nixpkgs-unstable {
- 			system = "x86_64-linux";
- 			config.allowUnfree = true;
- 		};
-		pkgs-master = import inputs.nixpkgs-master {
-			system = "x86_64-linux";
-			config.allowUnfree = true;
-		};
-		
-  		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
- 			system = "x86_64-linux";
- 			specialArgs = { 
-				inherit inputs;
-				pkgs-unstable = self.pkgs-unstable;
-				pkgs-master = self.pkgs-master;
-			};
- 			modules = [
- 				./hardware-configuration.nix
- 				./configuration.nix
- 				home-manager.nixosModules.home-manager {
- 					home-manager.useGlobalPkgs = true;
- 					home-manager.useUserPackages = true;
- 					home-manager.users.jhon = import ./home.nix;
- 					home-manager.extraSpecialArgs = { 
- 						inherit inputs; 
- 						pkgs-unstable = self.pkgs-unstable;
-						pkgs-master = self.pkgs-master;
- 					};
- 				}
-			nvf.nixosModules.default
-			./nvf-configuration.nix
-		];
- 		};
- 	};
+        outputs = inputs: inputs.flake-parts.lib.mkFlake
+                { inherit inputs; }
+                (inputs.import-tree ./modules // { systems = [ "x86_64-linux" ]; });
+		# 	outputs = {self, nixpkgs, home-manager, hyprland, nvf, ...}@inputs: {
+		# 	pkgs-unstable = import inputs.nixpkgs-unstable {
+		# 		system = "x86_64-linux";
+		# 		config.allowUnfree = true;
+		# 	};
+		# pkgs-master = import inputs.nixpkgs-master {
+		# 	system = "x86_64-linux";
+		# 	config.allowUnfree = true;
+		# };
+		#
+		# 		nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+		# 		system = "x86_64-linux";
+		# 		specialArgs = { 
+		# 		inherit inputs;
+		# 		pkgs-unstable = self.pkgs-unstable;
+		# 		pkgs-master = self.pkgs-master;
+		# 	};
+		# 		modules = [
+		# 			./hardware-configuration.nix
+		# 			./configuration.nix
+		# 			home-manager.nixosModules.home-manager {
+		# 				home-manager.useGlobalPkgs = true;
+		# 				home-manager.useUserPackages = true;
+		# 				home-manager.users.jhon = import ./home.nix;
+		# 				home-manager.extraSpecialArgs = { 
+		# 					inherit inputs; 
+		# 					pkgs-unstable = self.pkgs-unstable;
+		# 				pkgs-master = self.pkgs-master;
+		# 				};
+		# 			}
+		# 	nvf.nixosModules.default
+		# 	./nvf-configuration.nix
+		# ];
+		# 	};
+		# };
  }

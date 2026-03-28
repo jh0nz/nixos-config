@@ -9,7 +9,12 @@ in
   imports = [
     ./hyprland.nix
     ./hypridle.nix
+    inputs.noctalia.homeModules.default
   ];
+
+  programs.noctalia-shell = {
+    enable = true;
+  };
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
@@ -34,6 +39,7 @@ in
 		python3
 		pkgs-master.vscode
 		pkgs-master.dbeaver-bin
+                pkgs-master.unzip
   	];
   services.hyprpaper = {
     enable = true;
