@@ -7,7 +7,7 @@ let
 in
 {
   imports = [
-    ./hyprland.nix
+    # ./hyprland.nix
     ./hypridle.nix
   ];
 	home.username = "jhon";
@@ -20,6 +20,7 @@ in
 		hypridle
 		hyprlock
 		inputs.thorium.packages.${pkgs.stdenv.hostPlatform.system}.thorium-avx2
+                inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako
   		pkgs-master.obsidian
@@ -34,6 +35,10 @@ in
 		python3
 		pkgs-master.vscode
 		pkgs-master.dbeaver-bin
+                qbittorrent
+                lutris
+                unrar
+wev
   	];
   services.hyprpaper = {
     enable = true;
@@ -85,7 +90,7 @@ in
 	home.stateVersion = "25.11";
 	
 
-  programs.waybar.enable = true;
+  # programs.waybar.enable = true;
   # programs.waybar.settings = {
   #   mainBar = {
   #     height = 30;

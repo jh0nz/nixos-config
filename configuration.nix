@@ -3,10 +3,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, libs, pkgs, inputs, pkgs-unstable, ... }:
-let
-	username = "jhon";
-	hyprlandCmd = "${pkgs.hyprland}/bin/Hyprland";
-in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -22,7 +18,8 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-	services.power-profiles-daemon.enable = true; 
+	services.power-profiles-daemon.enable = true;
+services.upower.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
 virtualisation.docker.enable = true;
 	hardware.nvidia = {
@@ -39,18 +36,13 @@ virtualisation.docker.enable = true;
    zlib
    # Agrega aquí otras librerías si ldd indica que faltan
  ];	
-	programs.hyprland.enable = true;
-
+#programs.hyprland.enable = true;
+        programs.niri.enable = true;
   # Use linux kernel 6.18 from unstable.
   boot.kernelPackages = pkgs-unstable.linuxPackages_6_18;
  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-	nix.settings = {
-		substituters = ["https://hyprland.cachix.org"];
-		trusted-substituters = ["https://hyprland.cachix.org"];
-		trusted-public-keys = ["hyprland.cachix.org-a:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-	};
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -64,14 +56,14 @@ virtualisation.docker.enable = true;
 	services.greetd = {
 		enable = true;
 		restart = false;
-		settings = {
-			initial_session = {
-				command = hyprlandCmd;
-				user = username;
-			};
+                settings = {
 			default_session = {
-				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd sway";
+				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri";
 				user = "greeter";
+			};
+			initial_session = {
+				command = "${pkgs.niri}/bin/niri --session";
+				user = "jhon";
 			};
 		};
 	};
@@ -135,6 +127,7 @@ virtualisation.docker.enable = true;
 	zerotierone
 	android-tools
 	ngrok
+        xwayland-satellite
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

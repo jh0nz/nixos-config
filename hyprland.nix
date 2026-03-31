@@ -12,7 +12,8 @@
         "eDP-1, preferred, auto,1"
       ];
       exec-once = [
-        "waybar"
+        # "waybar"
+        "noctalia-shell"
         "mako"
 	"hypridle"
       ];
