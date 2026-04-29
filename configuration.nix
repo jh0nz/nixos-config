@@ -12,18 +12,87 @@
   hardware.graphics.enable = true;
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
+services.pipewire = {
+  enable = true;
+  pulse.enable = true;
+  wireplumber.extraConfig."99-disable-agc" = {
+    "monitor.alsa.rules" = [
+      {
+        matches = [
+          {
+            "node.name" = "~alsa_input.*";
+          }
+        ];
+        actions = {
+          "update-props" = {
+            "capture.auto_gain_control" = false;
+          };
+        };
+      }
+    ];
   };
-	services.power-profiles-daemon.enable = true;
+  extraConfig.pipewire-pulse."99-no-agc" = {
+    "pulse.rules" = [
+      {
+        matches = [ { "application.name" = "~.*"; } ];
+        actions = {
+          quirks = [ "block-source-volume" ];
+        };
+      }
+    ];
+  };
+};
+hardware.bluetooth.enable = true;
+hardware.bluetooth.powerOnBoot = true;
+
+        services.printing = {
+          enable = true;
+          drivers = with pkgs; [ gutenprint ];
+        };
+services.samba = {
+  enable = true;
+  openFirewall = true;
+  settings = {
+    global = {
+      "workgroup" = "WORKGROUP";
+      "server string" = "NixOS Samba";
+      "security" = "user";
+      "client min protocol" = "SMB2";
+      "client max protocol" = "SMB3";
+    };
+  };
+};
+services.avahi = {
+  enable = true;
+  nssmdns4 = true;
+  openFirewall = true;
+};
+xdg.portal = {
+  enable = true;
+  extraPortals = [ 
+    pkgs.xdg-desktop-portal-gnome # Recomendado para compatibilidad
+    pkgs.xdg-desktop-portal-gtk
+  ];
+  config.common.default = [ "gnome" "gtk" ];
+};
+
+        services.power-profiles-daemon.enable = true;
+          services.cloudflared = {
+                enable = true;
+                # This is the most straightforward way for a new tunnel
+                 tunnels = {
+                        "laptop" = {
+                                credentialsFile = "/var/lib/cloudflared/laptop.json"; 
+                                default = "http_status:404";
+                        };
+                };
+        };
 services.upower.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
 virtualisation.docker.enable = true;
 	hardware.nvidia = {
 		open = true;
+                powerManagement.enable = true;
 		modesetting.enable = true;
 		package = config.boot.kernelPackages.nvidiaPackages.stable;
 	};
@@ -39,7 +108,7 @@ virtualisation.docker.enable = true;
 #programs.hyprland.enable = true;
         programs.niri.enable = true;
   # Use linux kernel 6.18 from unstable.
-  boot.kernelPackages = pkgs-unstable.linuxPackages_6_18;
+  boot.kernelPackages = pkgs-unstable.linuxPackages_6_19;
  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -52,8 +121,11 @@ virtualisation.docker.enable = true;
 	};
 	hardware.graphics.enable32Bit= true;
   # Enable networking
-  networking.networkmanager.enable = true;
-	services.greetd = {
+        networking.networkmanager.enable = true;
+	networking.networkmanager.wifi.powersave = false;
+        networking.wireless.iwd.enable = true;
+        networking.networkmanager.wifi.backend = "iwd";
+        services.greetd = {
 		enable = true;
 		restart = false;
                 settings = {
@@ -119,7 +191,7 @@ virtualisation.docker.enable = true;
   # $ nix search wget
   
   environment.systemPackages = with pkgs; [
-  neovim
+        neovim
 	wget
 	git
 	brightnessctl
@@ -128,10 +200,15 @@ virtualisation.docker.enable = true;
 	android-tools
 	ngrok
         xwayland-satellite
+        kitty
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+environment.sessionVariables = {
+  NIXOS_OZONE_WL = "1"; # Fuerza a Electron/Vesktop a usar Wayland nativo
+  XDG_CURRENT_DESKTOP = "niri";
+  XDG_SESSION_TYPE = "wayland";
+};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -167,5 +244,4 @@ networking.firewall = {
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
-
 }

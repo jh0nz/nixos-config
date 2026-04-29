@@ -14,7 +14,8 @@ in
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
 		waybar
-		ghostty
+                alacritty
+		pkgs-master.ghostty
 		rofi
 		hyprpaper
 		hypridle
@@ -38,8 +39,24 @@ in
                 qbittorrent
                 lutris
                 unrar
-wev
-  	];
+                pkgs-master.google-chrome
+                pkgs-master.brave
+                sqlite
+                pkgs-master.cloudflared
+                wev
+                localsend
+#wineWow64Packages.stable
+                wineWowPackages.stable
+                winetricks
+                dosbox-x
+                vlc
+                pkgs-master.bun
+                tor-browser
+                legcord
+                ripcord
+pkgs-master.discord-canary
+        ];
+
   services.hyprpaper = {
     enable = true;
     settings = {
@@ -59,12 +76,24 @@ wev
     color-scheme = "prefer-dark";
   };
 };
+ programs.java = {
+        enable = true;
+        package = pkgs.openjdk21;
+};
+
+  home.sessionPath = [
+    "/home/jhon/.bun/bin"
+  ];
+
   programs.bash = {
 		enable = true;
 		shellAliases = {
-			update  = "sudo nixos-rebuild switch";
+			update  = "sudo nixos-rebuild switch --flake /home/jhon/nix-config";
 			garbage = "sudo nix-collect-garbage -d";
 		};
+initExtra = ''
+    export PATH="/home/jhon/.bun/bin:$PATH"
+  '';
 	};
 	programs.git = {
     		enable = true;
