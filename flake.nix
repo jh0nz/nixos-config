@@ -7,7 +7,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		hyprland.url = "github:hyprwm/Hyprland";
-		thorium.url = "github:Rishabh5321/thorium_flake";
+#thorium.url = "github:Rishabh5321/thorium_flake";
 		nixpkgs-master.url = "github:nixos/nixpkgs/master";
 		nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 		nvf.url = "github:notashelf/nvf";

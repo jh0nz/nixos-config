@@ -20,7 +20,7 @@ in
 		hyprpaper
 		hypridle
 		hyprlock
-		inputs.thorium.packages.${pkgs.stdenv.hostPlatform.system}.thorium-avx2
+#inputs.thorium.packages.${pkgs.stdenv.hostPlatform.system}.thorium-avx2
                 inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako
@@ -54,7 +54,7 @@ in
                 tor-browser
                 legcord
                 ripcord
-pkgs-master.discord-canary
+#pkgs-master.discord-canary
         ];
 
   services.hyprpaper = {
