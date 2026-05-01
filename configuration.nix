@@ -69,24 +69,23 @@ services.avahi = {
 };
 xdg.portal = {
   enable = true;
-  extraPortals = [ 
-    pkgs.xdg-desktop-portal-gnome # Recomendado para compatibilidad
-    pkgs.xdg-desktop-portal-gtk
+  xdgOpenUsePortal = true;
+  extraPortals = with pkgs; [
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gnome
   ];
-  config.common.default = [ "gnome" "gtk" ];
+  config = {
+    common.default = [ "gnome" ];
+    niri = {
+      default = [ "gnome" "gtk" ];
+      "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+      "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
+    };
+  };
 };
 
         services.power-profiles-daemon.enable = true;
-          services.cloudflared = {
-                enable = true;
-                # This is the most straightforward way for a new tunnel
-                 tunnels = {
-                        "laptop" = {
-                                credentialsFile = "/var/lib/cloudflared/laptop.json"; 
-                                default = "http_status:404";
-                        };
-                };
-        };
+
 services.upower.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
 virtualisation.docker.enable = true;
@@ -94,7 +93,7 @@ virtualisation.docker.enable = true;
 		open = true;
                 powerManagement.enable = true;
 		modesetting.enable = true;
-		package = config.boot.kernelPackages.nvidiaPackages.stable;
+		package = config.boot.kernelPackages.nvidiaPackages.latest;
 	};
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -108,7 +107,7 @@ virtualisation.docker.enable = true;
 #programs.hyprland.enable = true;
         programs.niri.enable = true;
   # Use linux kernel 6.18 from unstable.
-  boot.kernelPackages = pkgs-unstable.linuxPackages_6_19;
+  boot.kernelPackages = pkgs-unstable.linuxPackages_latest;
  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -133,10 +132,18 @@ virtualisation.docker.enable = true;
 				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri";
 				user = "greeter";
 			};
-			initial_session = {
-				command = "${pkgs.niri}/bin/niri --session";
-				user = "jhon";
-			};
+        initial_session = {
+                # Run the session under dbus-run-session and export the
+                # session environment into systemd so graphical-session.target
+                # and user services (like xdg-desktop-portal-gnome) work.
+                command = ''
+                  ${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.bash}/bin/bash -c '
+                    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE;
+                    exec ${pkgs.niri}/bin/niri --session
+                  '
+                '';
+                user = "jhon";
+        };
 		};
 	};
 	systemd.services."getty@tty1".enable = false;
@@ -205,9 +212,10 @@ virtualisation.docker.enable = true;
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 environment.sessionVariables = {
-  NIXOS_OZONE_WL = "1"; # Fuerza a Electron/Vesktop a usar Wayland nativo
+  NIXOS_OZONE_WL = "1";
   XDG_CURRENT_DESKTOP = "niri";
   XDG_SESSION_TYPE = "wayland";
+  XDG_SESSION_DESKTOP = "niri";
 };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -231,12 +239,15 @@ environment.sessionVariables = {
 networking.firewall = {
   enable = true;
   # Abre el puerto del servidor interno de IntelliJ
-  allowedTCPPorts = [ 63342 ];
+  allowedTCPPorts = [ 63342 53317 ];
   # Si es para emparejar Android, a veces necesitas un rango
   allowedTCPPortRanges = [
     { from = 5555; to = 5585; }
   ];
+allowedUDPPorts = [ 53317 ];
 };
+
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

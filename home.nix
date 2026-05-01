@@ -44,7 +44,7 @@ in
                 sqlite
                 pkgs-master.cloudflared
                 wev
-                localsend
+localsend
 #wineWow64Packages.stable
                 wineWowPackages.stable
                 winetricks
@@ -55,7 +55,9 @@ in
                 legcord
                 ripcord
 #pkgs-master.discord-canary
+                pkgs-master.widelands
         ];
+
 
   services.hyprpaper = {
     enable = true;
@@ -84,11 +86,24 @@ in
   home.sessionPath = [
     "/home/jhon/.bun/bin"
   ];
+gtk = {
+  enable = true;
+  theme = {
+    name = "Adwaita-dark";
+    package = pkgs.gnome-themes-extra;
+          };
+  gtk3.extraConfig = {
+    gtk-application-prefer-dark-theme = 1;
+  };
+  gtk4.extraConfig = {
+    gtk-application-prefer-dark-theme = 1;
+  };
+};
 
   programs.bash = {
 		enable = true;
 		shellAliases = {
-			update  = "sudo nixos-rebuild switch --flake /home/jhon/nix-config";
+			update  = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config";
 			garbage = "sudo nix-collect-garbage -d";
 		};
 initExtra = ''
@@ -119,7 +134,7 @@ initExtra = ''
 	home.stateVersion = "25.11";
 	
 
-  # programs.waybar.enable = true;
+          # programs.waybar.enable = true;
   # programs.waybar.settings = {
   #   mainBar = {
   #     height = 30;
