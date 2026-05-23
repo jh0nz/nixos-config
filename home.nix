@@ -82,7 +82,8 @@ gtk = {
   programs.bash = {
 		enable = true;
 		shellAliases = {
-			update  = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config";
+			update  = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config#pc";
+			update-lp = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config#laptop";
 			garbage = "sudo nix-collect-garbage -d";
 		};
 initExtra = ''

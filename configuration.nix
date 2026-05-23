@@ -4,10 +4,6 @@
 
 { config, libs, pkgs, inputs, ... }:
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
   #hardware
   hardware.graphics.enable = true;
   services.zerotierone.enable = true;
