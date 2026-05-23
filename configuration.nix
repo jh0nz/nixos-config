@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, libs, pkgs, inputs, pkgs-unstable, ... }:
+{ config, libs, pkgs, inputs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -12,9 +12,15 @@
   hardware.graphics.enable = true;
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
+security.polkit.enable = true;
+		security.pam.services.login.enableGnomeKeyring = false;
+	services.gnome.gnome-keyring.enable = false;
 services.pipewire = {
   enable = true;
-  pulse.enable = true;
+ 
+
+
+ pulse.enable = true;
   wireplumber.extraConfig."99-disable-agc" = {
     "monitor.alsa.rules" = [
       {
@@ -72,16 +78,7 @@ xdg.portal = {
   xdgOpenUsePortal = true;
   extraPortals = with pkgs; [
     xdg-desktop-portal-gtk
-    xdg-desktop-portal-gnome
   ];
-  config = {
-    common.default = [ "gnome" ];
-    niri = {
-      default = [ "gnome" "gtk" ];
-      "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
-      "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-    };
-  };
 };
 
         services.power-profiles-daemon.enable = true;
@@ -91,13 +88,17 @@ services.upower.enable = true;
 virtualisation.docker.enable = true;
 	hardware.nvidia = {
 		open = true;
-                powerManagement.enable = true;
+		powerManagement.enable = true;
 		modesetting.enable = true;
-		package = config.boot.kernelPackages.nvidiaPackages.latest;
+		# package removed to avoid mismatches between nvidia driver and the
+		# selected boot.kernelPackages. Let Nix pick the correct driver for
+		# the kernel in use (or set explicitly to the matching pkgset).
 	};
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm"];
  programs.nix-ld.enable = true;
  programs.nix-ld.libraries = with pkgs; [
    stdenv.cc.cc
@@ -107,7 +108,7 @@ virtualisation.docker.enable = true;
 #programs.hyprland.enable = true;
         programs.niri.enable = true;
   # Use linux kernel 6.18 from unstable.
-  boot.kernelPackages = pkgs-unstable.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
  
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -124,28 +125,17 @@ virtualisation.docker.enable = true;
 	networking.networkmanager.wifi.powersave = false;
         networking.wireless.iwd.enable = true;
         networking.networkmanager.wifi.backend = "iwd";
-        services.greetd = {
-		enable = true;
-		restart = false;
-                settings = {
-			default_session = {
-				command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd niri";
-				user = "greeter";
-			};
-        initial_session = {
-                # Run the session under dbus-run-session and export the
-                # session environment into systemd so graphical-session.target
-                # and user services (like xdg-desktop-portal-gnome) work.
-                command = ''
-                  ${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.bash}/bin/bash -c '
-                    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE;
-                    exec ${pkgs.niri}/bin/niri --session
-                  '
-                '';
-                user = "jhon";
+        # Use a simple X11 + i3 setup instead of the Wayland greeter/session.
+        # Disable greetd (was configured for a Wayland session) and enable
+        # the X server, LightDM display manager and i3 window manager.
+        services.greetd.enable = false;
+services.libinput.enable = true;
+        services.xserver = {
+          enable = true; # turn on X11
+          displayManager.lightdm.enable = true; # simple display manager
+          windowManager.i3.enable = true; # enable i3
+          # ensure libinput is available for input devices
         };
-		};
-	};
 	systemd.services."getty@tty1".enable = false;
 	systemd.services."autovt@tty1".enable = false;
 	fonts.packages = with pkgs; [
@@ -182,14 +172,21 @@ virtualisation.docker.enable = true;
   users.users.jhon = {
     isNormalUser = true;
     description = "jhon";
-    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" "kvm" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" "kvm" "video" "render"];
     packages = with pkgs; [];
   };
 
+  # Create a greeter system user and group for display manager
+  users.groups.greeter = {
+    gid = 1001; # arbitrary unused GID, adjust if needed
+  };
+
   users.users.greeter = {
-	isSystemUser = true;
-	group = "greeter";
-	extraGroups = ["video" ]; 
+    isSystemUser = true;
+    group = "greeter";
+    extraGroups = [ "video" ];
+    description = "Display manager greeter user";
+    createHome = false;
   };
 
   # Allow unfree packages
@@ -199,24 +196,33 @@ virtualisation.docker.enable = true;
   
   environment.systemPackages = with pkgs; [
         neovim
-	wget
-	git
-	brightnessctl
-	fastfetch
-	zerotierone
-	android-tools
-	ngrok
+        wget
+        git
+        brightnessctl
+        fastfetch
+        zerotierone
+        android-tools
+        ngrok
         xwayland-satellite
         kitty
+        pciutils
+        i3
+        i3status
+        dmenu
+        xrandr
+        xdotool
+        xinit
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-environment.sessionVariables = {
-  NIXOS_OZONE_WL = "1";
-  XDG_CURRENT_DESKTOP = "niri";
-  XDG_SESSION_TYPE = "wayland";
-  XDG_SESSION_DESKTOP = "niri";
-};
+  # Minimal X11 session variables for i3
+  environment.sessionVariables = {
+    XDG_CURRENT_DESKTOP = "i3";
+    XDG_SESSION_TYPE = "x11";
+    XDG_SESSION_DESKTOP = "i3";
+    GBM_BACKEND = "nvidia-drm";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -239,12 +245,12 @@ environment.sessionVariables = {
 networking.firewall = {
   enable = true;
   # Abre el puerto del servidor interno de IntelliJ
-  allowedTCPPorts = [ 63342 53317 ];
+  allowedTCPPorts = [ 63342 53317 4321 7777 34197];
   # Si es para emparejar Android, a veces necesitas un rango
   allowedTCPPortRanges = [
     { from = 5555; to = 5585; }
   ];
-allowedUDPPorts = [ 53317 ];
+allowedUDPPorts = [ 53317 34197];
 };
 
 

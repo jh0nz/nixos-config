@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, pkgs-unstable, pkgs-master, ...}:
+{ config, pkgs, inputs, pkgs-master, ...}:
 let
   miWallpaper = pkgs.fetchurl {
     url = "https://w.wallhaven.cc/full/8g/wallhaven-8gkdy2.jpg";
@@ -7,73 +7,52 @@ let
 in
 {
   imports = [
-    # ./hyprland.nix
-    ./hypridle.nix
   ];
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
-		waybar
                 alacritty
-		pkgs-master.ghostty
+		ghostty
 		rofi
-		hyprpaper
-		hypridle
-		hyprlock
-#inputs.thorium.packages.${pkgs.stdenv.hostPlatform.system}.thorium-avx2
-                inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+		inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako
-  		pkgs-master.obsidian
-  		syncthing
-  		pkgs-unstable.jetbrains.idea
-		pkgs-master.vesktop
-		pkgs-master.wiremix
-		pkgs-master.parsec-bin
+	   	syncthing
+	   	jetbrains.idea
+		vesktop
+		wiremix
+		parsec-bin
 		pkgs-master.gh
 		pkgs-master.lazygit
 		pkgs-master.nodejs_24
 		python3
-		pkgs-master.vscode
-		pkgs-master.dbeaver-bin
+		vscode
+		dbeaver-bin
                 qbittorrent
-                lutris
+                # lutris
                 unrar
-                pkgs-master.google-chrome
-                pkgs-master.brave
+                google-chrome
+                brave
                 sqlite
                 pkgs-master.cloudflared
                 wev
-localsend
-#wineWow64Packages.stable
-                wineWowPackages.stable
-                winetricks
+		localsend
                 dosbox-x
                 vlc
-                pkgs-master.bun
+                bun
                 tor-browser
-                legcord
-                ripcord
-#pkgs-master.discord-canary
-                pkgs-master.widelands
-        ];
+		protonup-qt
+		obsidian
+		scrcpy
+		httptoolkit
+        	pi-coding-agent
+		kilocode-cli
+		ngrok
+	];
 
 
-  services.hyprpaper = {
-    enable = true;
-    settings = {
-      ipc = "on";
-      splash = false;
-      # Usamos la ruta directa del store de Nix
-      preload = [ "${miWallpaper}" ];
-      wallpaper = [
-        # El primer parámetro es tu monitor (ej: eDP-1, HDMI-A-1)
-        # Si no sabes cuál es, usa una cadena vacía "" para todos
-        ", ${miWallpaper}"
-      ];
-    };
-  };
-  dconf.settings = {
+    dconf.settings = {
   "org/gnome/desktop/interface" = {
     color-scheme = "prefer-dark";
   };
@@ -131,10 +110,9 @@ initExtra = ''
 
 	};
 
-	home.stateVersion = "25.11";
-	
+  home.stateVersion = "25.11";
 
-          # programs.waybar.enable = true;
+  # programs.waybar.enable = true;
   # programs.waybar.settings = {
   #   mainBar = {
   #     height = 30;
@@ -307,4 +285,3 @@ initExtra = ''
   #   };
   # };
 }
-

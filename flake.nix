@@ -1,25 +1,25 @@
 {
 	description = "nixos config hyprland";
 	inputs = {
-		nixpkgs.url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
+		nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
 		home-manager = {
 			url = "github:nix-community/home-manager/release-25.11";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		hyprland.url = "github:hyprwm/Hyprland";
-#thorium.url = "github:Rishabh5321/thorium_flake";
+		#hyprland.url = "github:hyprwm/Hyprland";
 		nixpkgs-master.url = "github:nixos/nixpkgs/master";
-		nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+		#nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 		noctalia = {
                         url = "github:noctalia-dev/noctalia-shell";
                         inputs.nixpkgs.follows = "nixpkgs";
                 };
+		shapez-ce = {
+                        url = "path:/home/jhon/repos/shapez-ce";
+                        inputs.nixpkgs.follows = "nixpkgs";
+                };
+
 };
-  	outputs = {self, nixpkgs, home-manager, hyprland, ...}@inputs: {
- 		pkgs-unstable = import inputs.nixpkgs-unstable {
- 			system = "x86_64-linux";
- 			config.allowUnfree = true;
- 		};
+  	outputs = {self, nixpkgs, home-manager, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {
 			system = "x86_64-linux";
 			config.allowUnfree = true;
@@ -29,7 +29,6 @@
  			system = "x86_64-linux";
  			specialArgs = { 
 				inherit inputs;
-				pkgs-unstable = self.pkgs-unstable;
 				pkgs-master = self.pkgs-master;
 			};
  			modules = [
