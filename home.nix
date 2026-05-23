@@ -15,7 +15,7 @@ in
 		ghostty
 		rofi
 		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-		inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
+		# inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako
 	   	syncthing

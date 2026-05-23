@@ -13,8 +13,8 @@
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
 security.polkit.enable = true;
-		security.pam.services.login.enableGnomeKeyring = false;
-	services.gnome.gnome-keyring.enable = false;
+security.pam.services.login.enableGnomeKeyring = false;
+services.gnome.gnome-keyring.enable = false;
 services.pipewire = {
   enable = true;
  
@@ -84,30 +84,23 @@ xdg.portal = {
         services.power-profiles-daemon.enable = true;
 
 services.upower.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
+services.xserver.videoDrivers = ["nvidia"];
 virtualisation.docker.enable = true;
 	hardware.nvidia = {
 		open = true;
 		powerManagement.enable = true;
 		modesetting.enable = true;
-		# package removed to avoid mismatches between nvidia driver and the
-		# selected boot.kernelPackages. Let Nix pick the correct driver for
-		# the kernel in use (or set explicitly to the matching pkgset).
 	};
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_drm"];
  programs.nix-ld.enable = true;
  programs.nix-ld.libraries = with pkgs; [
    stdenv.cc.cc
    zlib
-   # Agrega aquí otras librerías si ldd indica que faltan
  ];	
-#programs.hyprland.enable = true;
         programs.niri.enable = true;
-  # Use linux kernel 6.18 from unstable.
   boot.kernelPackages = pkgs.linuxPackages;
  
   networking.hostName = "nixos"; # Define your hostname.
@@ -125,17 +118,13 @@ virtualisation.docker.enable = true;
 	networking.networkmanager.wifi.powersave = false;
         networking.wireless.iwd.enable = true;
         networking.networkmanager.wifi.backend = "iwd";
-        # Use a simple X11 + i3 setup instead of the Wayland greeter/session.
-        # Disable greetd (was configured for a Wayland session) and enable
-        # the X server, LightDM display manager and i3 window manager.
-        services.greetd.enable = false;
-services.libinput.enable = true;
-        services.xserver = {
-          enable = true; # turn on X11
-          displayManager.lightdm.enable = true; # simple display manager
-          windowManager.i3.enable = true; # enable i3
-          # ensure libinput is available for input devices
-        };
+  services.libinput.enable = true;
+  services.xserver.enable = false;
+  services.displayManager.ly = {
+    enable = true;
+    x11Support = false;
+  };
+  services.displayManager.defaultSession = "niri";
 	systemd.services."getty@tty1".enable = false;
 	systemd.services."autovt@tty1".enable = false;
 	fonts.packages = with pkgs; [
@@ -165,7 +154,7 @@ services.libinput.enable = true;
     variant = "";
   };
 
-  # Configure console keymap
+	  # Configure console keymap
   console.keyMap = "us";
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -215,15 +204,6 @@ services.libinput.enable = true;
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Minimal X11 session variables for i3
-  environment.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "i3";
-    XDG_SESSION_TYPE = "x11";
-    XDG_SESSION_DESKTOP = "i3";
-    GBM_BACKEND = "nvidia-drm";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -261,4 +241,4 @@ allowedUDPPorts = [ 53317 34197];
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
-}
+	}

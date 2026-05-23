@@ -13,11 +13,11 @@
                         url = "github:noctalia-dev/noctalia-shell";
                         inputs.nixpkgs.follows = "nixpkgs";
                 };
-		shapez-ce = {
-                        url = "path:/home/jhon/repos/shapez-ce";
-                        inputs.nixpkgs.follows = "nixpkgs";
-                };
-
+		# shapez-ce = {
+		#                       url = "path:/home/jhon/repos/shapez-ce";
+		#                       inputs.nixpkgs.follows = "nixpkgs";
+		#               };
+		#
 };
   	outputs = {self, nixpkgs, home-manager, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {
