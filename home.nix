@@ -11,10 +11,10 @@ in
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
+		noctalia-shell
                 alacritty
 		ghostty
 		rofi
-		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 		# inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako

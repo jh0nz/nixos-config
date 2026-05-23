@@ -6,13 +6,7 @@
 			url = "github:nix-community/home-manager/release-25.11";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-		#hyprland.url = "github:hyprwm/Hyprland";
 		nixpkgs-master.url = "github:nixos/nixpkgs/master";
-		#nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-		noctalia = {
-                        url = "github:noctalia-dev/noctalia-shell";
-                        inputs.nixpkgs.follows = "nixpkgs";
-                };
 		# shapez-ce = {
 		#                       url = "path:/home/jhon/repos/shapez-ce";
 		#                       inputs.nixpkgs.follows = "nixpkgs";
