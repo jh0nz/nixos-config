@@ -373,8 +373,6 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
     Mod+Space hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-show" "drun"; }
-    // Explicit Super binds for environments where Mod may differ
-    Super+Space hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-show" "drun"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
         Mod+Shift+B hotkey-overlay-title="Open browser" { spawn "google-chrome"; }
 
@@ -411,8 +409,6 @@ binds {
     Mod+O repeat=false { toggle-overview; }
 
     Mod+W repeat=false { close-window; }
-    // Allow Super+W as well so it matches the i3-style binding
-    Super+W repeat=false { close-window; }
 
     Mod+Left  { focus-column-left; }
     Mod+Down  { focus-window-down; }

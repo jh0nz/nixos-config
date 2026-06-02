@@ -69,13 +69,14 @@ services.avahi = {
   nssmdns4 = true;
   openFirewall = true;
 };
-xdg.portal = {
-  enable = true;
-  xdgOpenUsePortal = true;
-  extraPortals = with pkgs; [
-    xdg-desktop-portal-gtk
-  ];
-};
+	xdg.portal = {
+  		enable = true;
+  		wlr.enable = true;
+  		config.common.default = "gtk";
+  	 	extraPortals = [
+    			pkgs.xdg-desktop-portal-gtk
+  		];
+	};
 services.flatpak.enable = true;
         services.power-profiles-daemon.enable = true;
 
@@ -100,7 +101,6 @@ virtualisation.docker.enable = true;
 	programs.mangowc.enable = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
  
-  networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -119,7 +119,6 @@ virtualisation.docker.enable = true;
   services.xserver.enable = false;
   services.displayManager.ly = {
     enable = true;
-    x11Support = false;
   };
   services.displayManager.defaultSession = "niri";
 	systemd.services."getty@tty1".enable = false;

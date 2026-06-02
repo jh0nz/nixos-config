@@ -30,7 +30,7 @@ in
 		vscode
 		dbeaver-bin
                 qbittorrent
-                # lutris
+                #lutris
                 unrar
                 google-chrome
                 brave
@@ -49,8 +49,20 @@ in
         	pi-coding-agent
 		kilocode-cli
 		ngrok
+		#wineWow64Packages.stable
+		#winetricks
+		#darling-dmg
+		grim 
+		slurp 
+		wl-clipboard
+		wf-recorder
+		ffmpeg
+		libnotify
 	];
-
+	xdg.configFile = {
+		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/mango.conf";
+		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/niri.kdl"
+	};
 
     	dconf.settings = {
   		"org/gnome/desktop/interface" = {

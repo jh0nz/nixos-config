@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+if pgrep -x wf-recorder >/dev/null 2>&1; then
+    f=$(cat /tmp/wf-recorder-path 2>/dev/null)
+    notify-send -t 2000 "Recording stopped" "$f"
+    pkill -x wf-recorder
+    rm -f /tmp/wf-recorder-path
+else
+    mkdir -p "$HOME/Pictures" && f="$HOME/Pictures/$(date +%Y%m%d%H%M%S).mp4"
+    echo "$f" > /tmp/wf-recorder-path
+    g=$(slurp) && [ -n "$g" ] && notify-send -t 2000 "Recording started" "" && wf-recorder -g "$g" -f "$f"
+fi
