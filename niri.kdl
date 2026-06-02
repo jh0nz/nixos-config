@@ -113,7 +113,7 @@ output "eDP-1" {
 output "HDMI-A-1" {
     mode "1920x1080@74.973"
     scale 1.0
-    position x=1536 y=-820  // Colocado a la derecha del primero
+    position x=0 y=-1080  // Colocado a la derecha del primero
 }
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:

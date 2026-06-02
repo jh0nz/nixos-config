@@ -61,7 +61,7 @@ in
 	];
 	xdg.configFile = {
 		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/mango.conf";
-		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/niri.kdl"
+		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/niri.kdl";
 	};
 
     	dconf.settings = {
