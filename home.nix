@@ -52,17 +52,45 @@ in
 		#wineWow64Packages.stable
 		#winetricks
 		#darling-dmg
+		# screen capture
 		grim 
 		slurp 
 		wl-clipboard
+		satty
 		wf-recorder
+
+		mangohud
 		ffmpeg
 		libnotify
+		davinci-resolve
+		(pkgs.writeShellScriptBin "toggle-record" (builtins.readFile ./scripts/toggle-record))
+		(pkgs.writeShellScriptBin "capture-annotate" (builtins.readFile ./scripts/capture-annotate))
+		satty
 	];
 	xdg.configFile = {
 		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/mango.conf";
 		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/niri.kdl";
 	};
+
+	programs.ssh = {
+    		enable = true;
+    		enableDefaultConfig = false;
+
+    		matchBlocks = {
+      			"github.com" = {
+        		hostname = "github.com";
+        		user = "git";
+        		identityFile = "~/.ssh/id_ed25519";
+        		identitiesOnly = true;
+      		};
+      			"github.com.w" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519_work";
+        identitiesOnly = true;
+      };
+    };
+  };
 
     	dconf.settings = {
   		"org/gnome/desktop/interface" = {
@@ -111,9 +139,9 @@ in
     		};
 	};
 
-	services.syncthing = {
-		enable = true;
-	};
+	#services.syncthing = {
+	#	enable = true;
+	#};
 	home.pointerCursor = {
 		gtk.enable = true;
 		package = pkgs.bibata-cursors;

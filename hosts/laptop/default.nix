@@ -7,5 +7,9 @@
   ];
 
   networking.hostName = "laptop";
+  _module.args = { tecladoLayout = "latam"; };
+    environment.sessionVariables = {
+    XKB_DEFAULT_LAYOUT = "latam";
+  };
 }
 

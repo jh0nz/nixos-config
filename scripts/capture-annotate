@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+TMP="/tmp/$(date +%Y%m%d%H%M%S)_satty.png"
+slurp | grim -g - "$TMP" && satty -f "$TMP" --output-filename "$HOME/Pictures/Screenshots/Satty_%Y_%m_%d_%H%M%S.png" && rm -f "$TMP"

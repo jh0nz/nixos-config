@@ -7,5 +7,9 @@
   ];
 
   networking.hostName = "pc";
+  _module.args = { keyboardLayout = "us"; };
+    environment.sessionVariables = {
+    XKB_DEFAULT_LAYOUT = "us";
+  };
 }
 
