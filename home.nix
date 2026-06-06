@@ -108,6 +108,7 @@ in
 			init.defaultBranch = "main";
 			user.name = "jh0nz";
 			user.email = "jhondeycraft776@gmail.com";
+			pull.rebase = false;
     		};
 	};
 
