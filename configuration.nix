@@ -64,11 +64,13 @@ services.samba = {
     };
   };
 };
+
 services.avahi = {
   enable = true;
   nssmdns4 = true;
   openFirewall = true;
 };
+boot.supportedFilesystems = [ "ntfs" ];
 	xdg.portal = {
   		enable = true;
   		wlr.enable = true;

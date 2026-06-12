@@ -28,6 +28,8 @@ in
 		pkgs-master.nodejs_24
 		python3
 		vscode
+		antigravity
+
 		dbeaver-bin
                 qbittorrent
                 #lutris
@@ -59,6 +61,7 @@ in
 		satty
 		wf-recorder
 
+		ollama
 		mangohud
 		ffmpeg
 		libnotify
@@ -68,8 +71,8 @@ in
 		satty
 	];
 	xdg.configFile = {
-		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/mango.conf";
-		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/nixos-config/niri.kdl";
+		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/dotfiles/mango.conf";
+		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/dotfiles/niri.kdl";
 	};
 
 	programs.ssh = {
@@ -122,8 +125,8 @@ in
   	programs.bash = {
 		enable = true;
 		shellAliases = {
-			update  = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config#pc";
-			update-lp = "sudo nixos-rebuild switch --flake /home/jhon/nixos-config#laptop";
+			update  = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#pc";
+			update-lp = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#laptop";
 			garbage = "sudo nix-collect-garbage -d";
 		};
 		initExtra = ''
