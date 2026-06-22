@@ -12,6 +12,10 @@
 		#                       inputs.nixpkgs.follows = "nixpkgs";
 		#               };
 		#
+		gamevox = {
+			url = "github:jh0nz/gamevox-flake";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 };
   	outputs = {self, nixpkgs, home-manager, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {

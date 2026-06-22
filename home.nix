@@ -16,11 +16,11 @@ in
 		ghostty
 		rofi
 		# inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
+		inputs.gamevox.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		pkgs-master.opencode
 		mako
 	   	syncthing
 	   	jetbrains.idea
-		vesktop
 		wiremix
 		parsec-bin
 		pkgs-master.gh
@@ -29,10 +29,12 @@ in
 		python3
 		vscode
 		antigravity
+		zed-editor
+
+		thunar
 
 		dbeaver-bin
                 qbittorrent
-                #lutris
                 unrar
                 google-chrome
                 brave
@@ -49,17 +51,18 @@ in
 		scrcpy
 		httptoolkit
         	pi-coding-agent
-		kilocode-cli
 		ngrok
-		#wineWow64Packages.stable
-		#winetricks
-		#darling-dmg
-		# screen capture
 		grim 
 		slurp 
 		wl-clipboard
 		satty
 		wf-recorder
+		nixd
+		gopls
+
+		discord
+
+		bruno
 
 		ollama
 		mangohud
@@ -71,7 +74,6 @@ in
 		satty
 	];
 	xdg.configFile = {
-		"mango/config.conf".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/dotfiles/mango.conf";
 		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/dotfiles/niri.kdl";
 	};
 
@@ -94,12 +96,12 @@ in
       };
     };
   };
-
-    	dconf.settings = {
-  		"org/gnome/desktop/interface" = {
-    			color-scheme = "prefer-dark";
-  		};
-	};
+  dconf.enable = false;
+  #    	dconf.settings = {
+  #  		"org/gnome/desktop/interface" = {
+  #    			color-scheme = "prefer-dark";
+  #  		};
+  # };
  	programs.java = {
         	enable = true;
         	package = pkgs.openjdk21;
@@ -108,6 +110,9 @@ in
   	home.sessionPath = [
 		"/home/jhon/.bun/bin"
   	];
+	home.sessionVariables = {
+		GTK_USE_PORTAL = "1";
+	};
 	gtk = {
   		enable = true;
  		theme = {
@@ -116,10 +121,7 @@ in
         	};
   		gtk3.extraConfig = {
    	 		gtk-application-prefer-dark-theme = 1;
- 	 	};
-  		gtk4.extraConfig = {
-    			gtk-application-prefer-dark-theme = 1;
-  		};
+  	 	};
 	};
 
   	programs.bash = {
@@ -128,10 +130,11 @@ in
 			update  = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#pc";
 			update-lp = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#laptop";
 			garbage = "sudo nix-collect-garbage -d";
+			zed = "zeditor";
 		};
 		initExtra = ''
     		export PATH="/home/jhon/.bun/bin:$PATH"
-  		'';
+   		'';
 	};
 	programs.git = {
     		enable = true;

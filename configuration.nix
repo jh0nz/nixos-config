@@ -9,13 +9,21 @@
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
 security.polkit.enable = true;
-security.pam.services.login.enableGnomeKeyring = false;
-services.gnome.gnome-keyring.enable = false;
+security.rtkit.enable = true;
+security.pam.services.login.enableGnomeKeyring = true;
+services.gnome.gnome-keyring.enable = true;
+virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = false;
+      swtpm.enable = true;
+    };
+  };
+
 services.pipewire = {
   enable = true;
  
-
-
  pulse.enable = true;
   wireplumber.extraConfig."99-disable-agc" = {
     "monitor.alsa.rules" = [
@@ -70,15 +78,9 @@ services.avahi = {
   nssmdns4 = true;
   openFirewall = true;
 };
-boot.supportedFilesystems = [ "ntfs" ];
-	xdg.portal = {
-  		enable = true;
-  		wlr.enable = true;
-  		config.common.default = "gtk";
-  	 	extraPortals = [
-    			pkgs.xdg-desktop-portal-gtk
-  		];
-	};
+	boot.supportedFilesystems = [ "ntfs" ];
+xdg.portal.enable = true;
+xdg.portal.config.common.default = "gnome;gtk;";
 services.flatpak.enable = true;
         services.power-profiles-daemon.enable = true;
 
@@ -89,6 +91,15 @@ virtualisation.docker.enable = true;
 		open = true;
 		powerManagement.enable = true;
 		modesetting.enable = true;
+		prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true; 
+      };
+      
+      intelBusId = "PCI:0:2:0";   
+      nvidiaBusId = "PCI:1:0:0"; 
+    };
 	};
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -98,9 +109,26 @@ virtualisation.docker.enable = true;
  programs.nix-ld.libraries = with pkgs; [
    stdenv.cc.cc
    zlib
- ];	
-        programs.niri.enable = true;
-	programs.mangowc.enable = true;
+ ];
+ # boot.kernelParams = [
+ #      "intel_iommu=on"           # CPU Intel (la mayoría de laptops con RTX)
+ #      "iommu=pt"                 # Rendimiento
+ #      "vfio-pci.ids=10de:2520,10de:228e"  # Tus IDs GPU + audio
+ #    ];
+ #
+ #    boot.initrd.kernelModules = [
+ #      "vfio_pci"
+ #      "vfio"
+ #      "vfio_iommu_type1"
+ #    ];
+ #    boot.blacklistedKernelModules = [
+ #      "nvidia"
+ #      "nvidia_drm"
+ #      "nvidia_modeset"
+ #      "nvidia_uvm"
+ #      "nouveau"
+  #    ];
+  programs.niri.enable = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
  
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -118,11 +146,40 @@ virtualisation.docker.enable = true;
         networking.wireless.iwd.enable = true;
         networking.networkmanager.wifi.backend = "iwd";
   services.libinput.enable = true;
-  services.xserver.enable = false;
+   services.xserver.enable = true;
+   services.xserver.displayManager.sessionCommands = ''
+	slstatus &
+   '';
+   services.xserver.windowManager.dwm = {
+    enable = true;
+    package = pkgs.dwm.override {
+      patches = [
+        # True fullscreen (not just monocle + hide bar)
+        (pkgs.fetchpatch {
+          url = "https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-20211013-cb3f58a.diff";
+          hash = "sha256-vsTuudJCy7Zo1wdwpI/nY7Zu1txXx90QoDfJLmfDUH8=";
+        })
+        # All floating windows are centered automatically
+        (pkgs.fetchpatch {
+          url = "https://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff";
+          hash = "sha256-xQEwrNphaLOkhX3ER09sRPB3EEvxC73oNWMVkqo4iSY=";
+        })
+        # Hide tags with no clients on the bar (cleaner bar)
+        (pkgs.fetchpatch {
+          url = "https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.4.diff";
+          hash = "sha256-GIbRW0Inwbp99rsKLfIDGvPwZ3pqihROMBp5vFlHx5Q=";
+        })
+	(pkgs.fetchpatch {
+		url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.6.diff";
+		hash = "sha256-fPg8z822OH0/Y0iqXyPc5JVTqEAZIMInKR4XUuDxgXQ="; 
+	})
+	./keybinds.patch
+      ];
+    };
+  };
   services.displayManager.ly = {
     enable = true;
   };
-  services.displayManager.defaultSession = "niri";
 	systemd.services."getty@tty1".enable = false;
 	systemd.services."autovt@tty1".enable = false;
 	fonts.packages = with pkgs; [
@@ -154,12 +211,12 @@ virtualisation.docker.enable = true;
 
 	  # Configure console keymap
   console.keyMap = "us";
-
+	services.dbus.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jhon = {
     isNormalUser = true;
     description = "jhon";
-    extraGroups = [ "networkmanager" "wheel" "docker" "adbusers" "kvm" "video" "render"];
+    extraGroups = [ "libvirtd" "networkmanager" "wheel" "docker" "adbusers" "kvm" "video" "render"];
     packages = with pkgs; [];
   };
 
@@ -190,15 +247,20 @@ virtualisation.docker.enable = true;
         zerotierone
         android-tools
         ngrok
-        xwayland-satellite
         kitty
         pciutils
         i3
         i3status
         dmenu
-        xrandr
-        xdotool
-        xinit
+        st
+	    virt-manager
+    virtio-win     # Contiene las ISOs de controladores para Windows
+    spice-gtk
+    xdg-desktop-portal-gtk
+    nautilus
+    xdg-desktop-portal-gnome
+    xwayland-satellite
+    kdePackages.polkit-kde-agent-1
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
