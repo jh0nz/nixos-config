@@ -23,7 +23,6 @@ virtualisation.libvirtd = {
 
 services.pipewire = {
   enable = true;
- 
  pulse.enable = true;
   wireplumber.extraConfig."99-disable-agc" = {
     "monitor.alsa.rules" = [
@@ -52,6 +51,16 @@ services.pipewire = {
     ];
   };
 };
+services.ollama = {
+    enable = true;
+   package = pkgs.ollama-cuda;  
+    # 2. Forzar variables de entorno para que Ollama despierte a la GPU Nvidia
+    environmentVariables = {
+      __NV_PRIME_RENDER_OFFLOAD = "1";
+      __VK_LAYER_NV_optimus = "NVIDIA_only";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    };
+  };
 hardware.bluetooth.enable = true;
 hardware.bluetooth.powerOnBoot = true;
 
@@ -173,7 +182,6 @@ virtualisation.docker.enable = true;
 		url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.6.diff";
 		hash = "sha256-fPg8z822OH0/Y0iqXyPc5JVTqEAZIMInKR4XUuDxgXQ="; 
 	})
-	./keybinds.patch
       ];
     };
   };
@@ -204,13 +212,13 @@ virtualisation.docker.enable = true;
   };
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
+  #services.xserver.xkb = {
+  #  layout = "us";
+  #  variant = "";
+  #};
 
 	  # Configure console keymap
-  console.keyMap = "us";
+  #console.keyMap = "us";
 	services.dbus.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jhon = {

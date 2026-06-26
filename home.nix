@@ -32,12 +32,12 @@ in
 		zed-editor
 
 		thunar
-
+		
+		firefox
 		dbeaver-bin
                 qbittorrent
                 unrar
                 google-chrome
-                brave
                 sqlite
                 pkgs-master.cloudflared
                 wev
@@ -64,7 +64,7 @@ in
 
 		bruno
 
-		ollama
+		act
 		mangohud
 		ffmpeg
 		libnotify

@@ -11,5 +11,13 @@
     environment.sessionVariables = {
     XKB_DEFAULT_LAYOUT = "latam";
   };
+    Configure keymap in X11
+  services.xserver.xkb = {
+   layout = "latam";
+   variant = "";
+  };
+
+   # Configure console keymap
+	  console.keyMap = "latam";
 }
 
