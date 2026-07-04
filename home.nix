@@ -29,9 +29,9 @@ in
 		vscode
 		antigravity
 		zed-editor
-
 		thunar
-		
+		codebase-memory-mcp
+		uv		
 		firefox
 		dbeaver-bin
                 qbittorrent
@@ -43,7 +43,6 @@ in
 		localsend
                 dosbox-x
                 vlc
-                bun
                 tor-browser
 		protonup-qt
 		obsidian
@@ -58,7 +57,8 @@ in
 		wf-recorder
 		nixd
 		gopls
-
+		
+		lazysql
 		discord
 
 		bruno
@@ -67,12 +67,13 @@ in
 		mangohud
 		ffmpeg
 		libnotify
-		davinci-resolve
+		#davinci-resolve
 		(pkgs.writeShellScriptBin "toggle-record" (builtins.readFile ./scripts/toggle-record))
 		(pkgs.writeShellScriptBin "capture-annotate" (builtins.readFile ./scripts/capture-annotate))
 		satty
 	];
-	xdg.configFile = {
+
+	  	xdg.configFile = {
 		"niri/config.kdl".source = config.lib.file.mkOutOfStoreSymlink "/home/jhon/dotfiles/niri.kdl";
 	};
 
@@ -108,6 +109,7 @@ in
 
   	home.sessionPath = [
 		"/home/jhon/.bun/bin"
+		"/home/jhon/.local/bin"
   	];
 	home.sessionVariables = {
 		GTK_USE_PORTAL = "1";

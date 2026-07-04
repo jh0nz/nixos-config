@@ -8,6 +8,22 @@
   hardware.graphics.enable = true;
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
+  hardware.enableRedistributableFirmware = true;
+   boot.extraModprobeConfig = ''
+    options rtw89_pci disable_aspm=y disable_aspm_l1=y disable_aspm_l1ss=y
+    options rtw89_core disable_ps_mode=y disable_lps_deep=y
+  '';
+
+ programs.obs-studio = {
+    enable = true;
+    enableVirtualCamera = true;
+  };
+
+
+programs.direnv = {
+enable = true;
+nix-direnv.enable = true;
+};
 security.polkit.enable = true;
 security.rtkit.enable = true;
 security.pam.services.login.enableGnomeKeyring = true;
@@ -51,16 +67,16 @@ services.pipewire = {
     ];
   };
 };
-services.ollama = {
-    enable = true;
-   package = pkgs.ollama-cuda;  
-    # 2. Forzar variables de entorno para que Ollama despierte a la GPU Nvidia
-    environmentVariables = {
-      __NV_PRIME_RENDER_OFFLOAD = "1";
-      __VK_LAYER_NV_optimus = "NVIDIA_only";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-    };
-  };
+# services.ollama = {
+#     enable = true;
+#    package = pkgs.ollama-cuda;  
+#     # 2. Forzar variables de entorno para que Ollama despierte a la GPU Nvidia
+#     environmentVariables = {
+#       __NV_PRIME_RENDER_OFFLOAD = "1";
+#       __VK_LAYER_NV_optimus = "NVIDIA_only";
+#       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+#     };
+#   };
 hardware.bluetooth.enable = true;
 hardware.bluetooth.powerOnBoot = true;
 
@@ -269,6 +285,11 @@ virtualisation.docker.enable = true;
     xdg-desktop-portal-gnome
     xwayland-satellite
     kdePackages.polkit-kde-agent-1
+    librsvg
+    adwaita-icon-theme
+    shared-mime-info
+    gnome-backgrounds
+    dconf
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
