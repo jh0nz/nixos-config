@@ -19,6 +19,17 @@
     enableVirtualCamera = true;
   };
 
+  services.hermes-agent = {
+    enable = true;
+    # Modelo por defecto (OpenRouter)
+    #settings.model.default = "anthropic/claude-sonnet-4";
+    # Archivo con variables de entorno (API keys)
+    #environmentFiles = [ config.sops.secrets."hermes-env".path ];
+    # Poner el CLI en el PATH del sistema (opcional)
+    addToSystemPackages = true;
+  };
+
+
 
 programs.direnv = {
 enable = true;

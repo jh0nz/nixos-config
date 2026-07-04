@@ -16,8 +16,12 @@
 			url = "github:jh0nz/gamevox-flake";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		hermes-agent = { 
+			url = "github:NousResearch/hermes-agent";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
 };
-  	outputs = {self, nixpkgs, home-manager, ...}@inputs: {
+  	outputs = {self, nixpkgs, home-manager, hermes-agent, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {
 			system = "x86_64-linux";
 			config.allowUnfree = true;
@@ -32,6 +36,7 @@
  				modules = [
  					./hosts/pc/hardware-configuration.nix
  					./configuration.nix
+					hermes-agent.nixosModules.default
  					home-manager.nixosModules.home-manager {
  						home-manager.useGlobalPkgs = true;
  						home-manager.useUserPackages = true;
@@ -53,6 +58,7 @@
  				modules = [
  					./hosts/laptop/hardware-configuration.nix
  					./configuration.nix
+					hermes-agent.nixosModules.default
  					home-manager.nixosModules.home-manager {
  						home-manager.useGlobalPkgs = true;
  						home-manager.useUserPackages = true;
