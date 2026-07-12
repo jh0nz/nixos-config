@@ -27,6 +27,20 @@
     #environmentFiles = [ config.sops.secrets."hermes-env".path ];
     # Poner el CLI en el PATH del sistema (opcional)
     addToSystemPackages = true;
+    #environmentFiles = [ "/home/jhon/.hermes/.env" ];
+        settings = {
+      model = {
+        # El modelo "openrouter/free" elige automáticamente el modelo gratuito disponible
+        default = "openrouter/free";
+        # base_url = "https://openrouter.ai/api/v1"; # Este es el valor por defecto, no hace falta ponerlo
+      };
+      toolsets = [ "all" ];
+      # (Opcional) puedes añadir más ajustes como memoria, etc.
+    };
+
+    # Cargar las variables de entorno desde sops
+    #environmentFiles = [ config.sops.secrets."hermes-env".path ];
+environmentFiles = [ "/var/lib/hermes/env" ];
   };
 
 
@@ -47,9 +61,10 @@ virtualisation.libvirtd = {
       swtpm.enable = true;
     };
   };
-
 services.pipewire = {
   enable = true;
+    alsa.enable = true;
+  alsa.support32Bit = true;
  pulse.enable = true;
   wireplumber.extraConfig."99-disable-agc" = {
     "monitor.alsa.rules" = [
@@ -88,8 +103,18 @@ services.pipewire = {
 #       __GLX_VENDOR_LIBRARY_NAME = "nvidia";
 #     };
 #   };
-hardware.bluetooth.enable = true;
-hardware.bluetooth.powerOnBoot = true;
+hardware.bluetooth = {
+  enable = true;
+  powerOnBoot = true;
+  settings = {
+    General = {
+      # Forzar perfiles de Audio (Sink = Salida, Source = Entrada, Media = Control)
+      Enable = "Source,Sink,Media,Socket";
+      # Ayuda a detectar funciones avanzadas de auriculares modernos de Xiaomi
+      Experimental = true;
+    };
+  };
+};
 
         services.printing = {
           enable = true;
@@ -137,6 +162,10 @@ virtualisation.docker.enable = true;
       nvidiaBusId = "PCI:1:0:0"; 
     };
 	};
+  
+hardware.graphics.extraPackages = [
+  pkgs.cudaPackages.cudatoolkit
+];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -251,7 +280,7 @@ virtualisation.docker.enable = true;
   users.users.jhon = {
     isNormalUser = true;
     description = "jhon";
-    extraGroups = [ "libvirtd" "networkmanager" "wheel" "docker" "adbusers" "kvm" "video" "render"];
+    extraGroups = [ "libvirtd" "networkmanager" "wheel" "docker" "adbusers" "kvm" "video" "render" "input"];
     packages = with pkgs; [];
   };
 

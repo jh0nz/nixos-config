@@ -20,6 +20,10 @@
 			url = "github:NousResearch/hermes-agent";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		noctalia = {
+			url = "github:noctalia-dev/noctalia";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};	
 };
   	outputs = {self, nixpkgs, home-manager, hermes-agent, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {

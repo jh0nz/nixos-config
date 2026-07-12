@@ -11,12 +11,14 @@ in
 	home.username = "jhon";
 	home.homeDirectory = "/home/jhon";
 	home.packages = with pkgs; [
-		noctalia-shell
                 alacritty
 		ghostty
 		rofi
 		# inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		inputs.gamevox.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
+		#inputs.hermes-agent.packages.${pkgs.system}.desktop
+		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+
 		mako
 	   	syncthing
 	   	jetbrains.idea
@@ -24,14 +26,19 @@ in
 		parsec-bin
 		pkgs-master.gh
 		pkgs-master.lazygit
-		pkgs-master.nodejs_24
+		nodejs_24
 		python3
 		vscode
 		antigravity
 		zed-editor
 		thunar
 		codebase-memory-mcp
-		uv		
+		uv
+	
+		voxtype
+		sops
+		age
+
 		firefox
 		dbeaver-bin
                 qbittorrent
