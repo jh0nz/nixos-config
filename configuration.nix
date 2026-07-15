@@ -330,6 +330,17 @@ hardware.graphics.extraPackages = [
     shared-mime-info
     gnome-backgrounds
     dconf
+    glycin-loaders      # needed by flatpak (sober) for SVG icon loading on GNOME/niri
+  ];
+
+  # Flatpak (sober) + GNOME Platform glycin: loaders are sandboxed via
+  #   flatpak-spawn --sandbox … prlimit … /usr/libexec/glycin-loaders/2+/glycin-svg
+  # On FHS distros those live under /usr; on NixOS they only exist in the store.
+  # Without these links, SVG icon load fails and GTK aborts:
+  #   bwrap: execvp prlimit: No such file or directory
+  systemd.tmpfiles.rules = [
+    "L+ /usr/libexec/glycin-loaders - - - - ${pkgs.glycin-loaders}/libexec/glycin-loaders"
+    "L+ /usr/bin/prlimit - - - - ${pkgs.util-linux.bin}/bin/prlimit"
   ];
  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

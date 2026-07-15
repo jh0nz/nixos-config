@@ -115,6 +115,11 @@ in
 	};
 
   	home.sessionPath = [
+		# Flatpak 1.18 on NixOS: flatpak-spawn --sandbox inherits host PATH.
+		# Glycin looks up bare "prlimit"; host nix paths aren't in the sandbox,
+		# so /usr/bin must come first. https://github.com/flatpak/flatpak/issues/6717
+		"/usr/bin"
+		"/bin"
 		"/home/jhon/.bun/bin"
 		"/home/jhon/.local/bin"
   	];
