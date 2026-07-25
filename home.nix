@@ -15,7 +15,7 @@ in
 		ghostty
 		rofi
 		# inputs.shapez-ce.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
-		inputs.gamevox.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
+		#inputs.gamevox.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		#inputs.hermes-agent.packages.${pkgs.system}.desktop
 		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 
@@ -24,18 +24,19 @@ in
 	   	jetbrains.idea
 		wiremix
 		parsec-bin
-		pkgs-master.gh
-		pkgs-master.lazygit
+		gh
+		lazygit
 		nodejs_24
 		python3
 		vscode
 		antigravity
 		zed-editor
 		thunar
-		codebase-memory-mcp
+		#codebase-memory-mcp
 		uv
 	
-		voxtype
+		thunderbird
+		#voxtype
 		sops
 		age
 
@@ -44,26 +45,27 @@ in
                 qbittorrent
                 unrar
                 google-chrome
-                sqlite
-                pkgs-master.cloudflared
+                ##inputs.browser-previews.packages.${pkgs.system}.google-chrome-beta
+		#sqlite
+                #pkgs-master.cloudflared
                 wev
 		localsend
-                dosbox-x
+                #dosbox-x
                 vlc
-                tor-browser
-		protonup-qt
+                #tor-browser
+		#protonup-qt
 		obsidian
 		scrcpy
-		httptoolkit
-        	pi-coding-agent
-		ngrok
+		#httptoolkit
+        	#pi-coding-agent
+		#ngrok
 		grim 
 		slurp 
 		wl-clipboard
 		satty
 		wf-recorder
 		nixd
-		gopls
+		#gopls
 		
 		lazysql
 		discord

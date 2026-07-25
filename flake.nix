@@ -23,7 +23,11 @@
 		noctalia = {
 			url = "github:noctalia-dev/noctalia";
 			inputs.nixpkgs.follows = "nixpkgs";
-		};	
+		};
+		browser-previews = { 
+			url = "github:nix-community/browser-previews";
+                        inputs.nixpkgs.follows = "nixpkgs"; 
+		};
 };
   	outputs = {self, nixpkgs, home-manager, hermes-agent, ...}@inputs: {
 		pkgs-master = import inputs.nixpkgs-master {

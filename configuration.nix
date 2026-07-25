@@ -9,39 +9,42 @@
   services.zerotierone.enable = true;
   services.zerotierone.joinNetworks = ["8286ac0e470f2f2f"];
   hardware.enableRedistributableFirmware = true;
-   boot.extraModprobeConfig = ''
-    options rtw89_pci disable_aspm=y disable_aspm_l1=y disable_aspm_l1ss=y
-    options rtw89_core disable_ps_mode=y disable_lps_deep=y
-  '';
+  #  boot.extraModprobeConfig = ''
+  #   options rtw89_pci disable_aspm=y disable_aspm_l1=y disable_aspm_l1ss=y
+  #   options rtw89_core disable_ps_mode=y disable_lps_deep=y
+  # '';
 
- programs.obs-studio = {
-    enable = true;
-    enableVirtualCamera = true;
-  };
+ #programs.obs-studio = {
+  #  enable = true;
+   # enableVirtualCamera = true;
+#	    plugins = with pkgs.obs-studio-plugins; [
+ #     obs-backgroundremoval
+  #  ];
+              # };
 
-  services.hermes-agent = {
-    enable = true;
-    # Modelo por defecto (OpenRouter)
-    #settings.model.default = "anthropic/claude-sonnet-4";
-    # Archivo con variables de entorno (API keys)
-    #environmentFiles = [ config.sops.secrets."hermes-env".path ];
-    # Poner el CLI en el PATH del sistema (opcional)
-    addToSystemPackages = true;
-    #environmentFiles = [ "/home/jhon/.hermes/.env" ];
-        settings = {
-      model = {
-        # El modelo "openrouter/free" elige automáticamente el modelo gratuito disponible
-        default = "openrouter/free";
-        # base_url = "https://openrouter.ai/api/v1"; # Este es el valor por defecto, no hace falta ponerlo
-      };
-      toolsets = [ "all" ];
-      # (Opcional) puedes añadir más ajustes como memoria, etc.
-    };
-
-    # Cargar las variables de entorno desde sops
-    #environmentFiles = [ config.sops.secrets."hermes-env".path ];
-environmentFiles = [ "/var/lib/hermes/env" ];
-  };
+#   services.hermes-agent = {
+#     enable = true;
+#     # Modelo por defecto (OpenRouter)
+#     #settings.model.default = "anthropic/claude-sonnet-4";
+#     # Archivo con variables de entorno (API keys)
+#     #environmentFiles = [ config.sops.secrets."hermes-env".path ];
+#     # Poner el CLI en el PATH del sistema (opcional)
+#     addToSystemPackages = true;
+#     #environmentFiles = [ "/home/jhon/.hermes/.env" ];
+#         settings = {
+#       model = {
+#         # El modelo "openrouter/free" elige automáticamente el modelo gratuito disponible
+#         default = "openrouter/free";
+#         # base_url = "https://openrouter.ai/api/v1"; # Este es el valor por defecto, no hace falta ponerlo
+#       };
+#       toolsets = [ "all" ];
+#       # (Opcional) puedes añadir más ajustes como memoria, etc.
+#     };
+#
+#     # Cargar las variables de entorno desde sops
+#     #environmentFiles = [ config.sops.secrets."hermes-env".path ];
+# environmentFiles = [ "/var/lib/hermes/env" ];
+#   };
 
 
 
@@ -53,14 +56,14 @@ security.polkit.enable = true;
 security.rtkit.enable = true;
 security.pam.services.login.enableGnomeKeyring = true;
 services.gnome.gnome-keyring.enable = true;
-virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      package = pkgs.qemu_kvm;
-      runAsRoot = false;
-      swtpm.enable = true;
-    };
-  };
+# virtualisation.libvirtd = {
+#     enable = true;
+#     qemu = {
+#       package = pkgs.qemu_kvm;
+#       runAsRoot = false;
+#       swtpm.enable = true;
+#     };
+#   };
 services.pipewire = {
   enable = true;
     alsa.enable = true;
@@ -163,18 +166,18 @@ virtualisation.docker.enable = true;
     };
 	};
   
-hardware.graphics.extraPackages = [
-  pkgs.cudaPackages.cudatoolkit
-];
+# hardware.graphics.extraPackages = [
+#   pkgs.cudaPackages.cudatoolkit
+# ];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
- programs.nix-ld.enable = true;
- programs.nix-ld.libraries = with pkgs; [
-   stdenv.cc.cc
-   zlib
- ];
+ # programs.nix-ld.enable = true;
+ # programs.nix-ld.libraries = with pkgs; [
+ #   stdenv.cc.cc
+ #   zlib
+ # ];
  # boot.kernelParams = [
  #      "intel_iommu=on"           # CPU Intel (la mayoría de laptops con RTX)
  #      "iommu=pt"                 # Rendimiento
@@ -211,36 +214,36 @@ hardware.graphics.extraPackages = [
         networking.wireless.iwd.enable = true;
         networking.networkmanager.wifi.backend = "iwd";
   services.libinput.enable = true;
-   services.xserver.enable = true;
-   services.xserver.displayManager.sessionCommands = ''
-	slstatus &
-   '';
-   services.xserver.windowManager.dwm = {
-    enable = true;
-    package = pkgs.dwm.override {
-      patches = [
-        # True fullscreen (not just monocle + hide bar)
-        (pkgs.fetchpatch {
-          url = "https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-20211013-cb3f58a.diff";
-          hash = "sha256-vsTuudJCy7Zo1wdwpI/nY7Zu1txXx90QoDfJLmfDUH8=";
-        })
-        # All floating windows are centered automatically
-        (pkgs.fetchpatch {
-          url = "https://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff";
-          hash = "sha256-xQEwrNphaLOkhX3ER09sRPB3EEvxC73oNWMVkqo4iSY=";
-        })
-        # Hide tags with no clients on the bar (cleaner bar)
-        (pkgs.fetchpatch {
-          url = "https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.4.diff";
-          hash = "sha256-GIbRW0Inwbp99rsKLfIDGvPwZ3pqihROMBp5vFlHx5Q=";
-        })
-	(pkgs.fetchpatch {
-		url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.6.diff";
-		hash = "sha256-fPg8z822OH0/Y0iqXyPc5JVTqEAZIMInKR4XUuDxgXQ="; 
-	})
-      ];
-    };
-  };
+   # services.xserver.enable = true;
+	#   services.xserver.displayManager.sessionCommands = ''
+	# slstatus &
+	#   '';
+	#   services.xserver.windowManager.dwm = {
+	#    enable = true;
+	#    package = pkgs.dwm.override {
+	#      patches = [
+	#        # True fullscreen (not just monocle + hide bar)
+	#        (pkgs.fetchpatch {
+	#          url = "https://dwm.suckless.org/patches/actualfullscreen/dwm-actualfullscreen-20211013-cb3f58a.diff";
+	#          hash = "sha256-vsTuudJCy7Zo1wdwpI/nY7Zu1txXx90QoDfJLmfDUH8=";
+	#        })
+	#        # All floating windows are centered automatically
+	#        (pkgs.fetchpatch {
+	#          url = "https://dwm.suckless.org/patches/alwayscenter/dwm-alwayscenter-20200625-f04cac6.diff";
+	#          hash = "sha256-xQEwrNphaLOkhX3ER09sRPB3EEvxC73oNWMVkqo4iSY=";
+	#        })
+	#        # Hide tags with no clients on the bar (cleaner bar)
+	#        (pkgs.fetchpatch {
+	#          url = "https://dwm.suckless.org/patches/hide_vacant_tags/dwm-hide_vacant_tags-6.4.diff";
+	#          hash = "sha256-GIbRW0Inwbp99rsKLfIDGvPwZ3pqihROMBp5vFlHx5Q=";
+	#        })
+	# (pkgs.fetchpatch {
+	# 	url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.6.diff";
+	# 	hash = "sha256-fPg8z822OH0/Y0iqXyPc5JVTqEAZIMInKR4XUuDxgXQ="; 
+	# })
+	#      ];
+	#    };
+	#  };
   services.displayManager.ly = {
     enable = true;
   };
@@ -303,6 +306,7 @@ hardware.graphics.extraPackages = [
   # $ nix search wget
   
   environment.systemPackages = with pkgs; [
+ 
         neovim
         wget
         git
@@ -310,27 +314,27 @@ hardware.graphics.extraPackages = [
         fastfetch
         zerotierone
         android-tools
-        ngrok
+        # ngrok
         kitty
-        pciutils
-        i3
-        i3status
-        dmenu
-        st
-	    virt-manager
-    virtio-win     # Contiene las ISOs de controladores para Windows
-    spice-gtk
-    xdg-desktop-portal-gtk
-    nautilus
-    xdg-desktop-portal-gnome
-    xwayland-satellite
-    kdePackages.polkit-kde-agent-1
-    librsvg
-    adwaita-icon-theme
-    shared-mime-info
-    gnome-backgrounds
-    dconf
-    glycin-loaders      # needed by flatpak (sober) for SVG icon loading on GNOME/niri
+        # pciutils
+        # i3
+        # i3status
+        # dmenu
+        # st
+    #  virt-manager
+    # virtio-win     # Contiene las ISOs de controladores para Windows
+    # spice-gtk
+    # xdg-desktop-portal-gtk
+    # nautilus
+    # xdg-desktop-portal-gnome
+    # xwayland-satellite
+    # kdePackages.polkit-kde-agent-1
+    # librsvg
+    # adwaita-icon-theme
+    # shared-mime-info
+    # gnome-backgrounds
+    # dconf
+    # glycin-loaders      # needed by flatpak (sober) for SVG icon loading on GNOME/niri
   ];
 
   # Flatpak (sober) + GNOME Platform glycin: loaders are sandboxed via
