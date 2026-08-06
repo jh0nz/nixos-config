@@ -3,7 +3,7 @@
 	inputs = {
 		nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
 		home-manager = {
-			url = "github:nix-community/home-manager/release-25.11";
+			url = "github:nix-community/home-manager";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 		nixpkgs-master.url = "github:nixos/nixpkgs/master";

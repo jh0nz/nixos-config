@@ -21,6 +21,7 @@
  #     obs-backgroundremoval
   #  ];
               # };
+programs.nix-ld.enable = true;
 
 #   services.hermes-agent = {
 #     enable = true;
@@ -45,6 +46,9 @@
 #     #environmentFiles = [ config.sops.secrets."hermes-env".path ];
 # environmentFiles = [ "/var/lib/hermes/env" ];
 #   };
+
+virtualisation.waydroid.enable = true;
+virtualisation.waydroid.package = pkgs.waydroid-nftables;
 
 
 
@@ -155,15 +159,15 @@ virtualisation.docker.enable = true;
 		open = true;
 		powerManagement.enable = true;
 		modesetting.enable = true;
-		prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true; 
-      };
+		#prime = {
+      #offload = {
+      #  enable = true;
+      #  enableOffloadCmd = true; 
+      #};
       
-      intelBusId = "PCI:0:2:0";   
-      nvidiaBusId = "PCI:1:0:0"; 
-    };
+      #intelBusId = "PCI:0:2:0";   
+      #nvidiaBusId = "PCI:1:0:0"; 
+    #};
 	};
   
 # hardware.graphics.extraPackages = [
@@ -214,7 +218,7 @@ virtualisation.docker.enable = true;
         networking.wireless.iwd.enable = true;
         networking.networkmanager.wifi.backend = "iwd";
   services.libinput.enable = true;
-   # services.xserver.enable = true;
+services.xserver.enable = true;
 	#   services.xserver.displayManager.sessionCommands = ''
 	# slstatus &
 	#   '';
@@ -306,7 +310,8 @@ virtualisation.docker.enable = true;
   # $ nix search wget
   
   environment.systemPackages = with pkgs; [
- 
+    waydroid
+    wl-clipboard 
         neovim
         wget
         git
@@ -327,7 +332,7 @@ virtualisation.docker.enable = true;
     # xdg-desktop-portal-gtk
     # nautilus
     # xdg-desktop-portal-gnome
-    # xwayland-satellite
+    xwayland-satellite
     # kdePackages.polkit-kde-agent-1
     # librsvg
     # adwaita-icon-theme
@@ -369,14 +374,13 @@ virtualisation.docker.enable = true;
 networking.firewall = {
   enable = true;
   # Abre el puerto del servidor interno de IntelliJ
-  allowedTCPPorts = [ 63342 53317 4321 7777 34197];
+  allowedTCPPorts = [ 63342 53317 4321 7777 34197 53 67];
   # Si es para emparejar Android, a veces necesitas un rango
   allowedTCPPortRanges = [
     { from = 5555; to = 5585; }
   ];
-allowedUDPPorts = [ 53317 34197];
+allowedUDPPorts = [ 53317 34197 53 67];
 };
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -384,5 +388,5 @@ allowedUDPPorts = [ 53317 34197];
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "25.11"; # Did you read the comment?
+  system.stateVersion = "26.04"; # Did you read the comment?
 	}

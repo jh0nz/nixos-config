@@ -18,7 +18,10 @@ in
 		#inputs.gamevox.outputs.packages.${pkgs.stdenv.hostPlatform.system}.default
 		#inputs.hermes-agent.packages.${pkgs.system}.desktop
 		inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-
+	
+		android-studio 
+		
+		dunst
 		mako
 	   	syncthing
 	   	jetbrains.idea
@@ -69,6 +72,8 @@ in
 		
 		lazysql
 		discord
+		bun
+		pnpm
 
 		bruno
 
@@ -90,7 +95,7 @@ in
     		enable = true;
     		enableDefaultConfig = false;
 
-    		matchBlocks = {
+    		settings = {
       			"github.com" = {
         		hostname = "github.com";
         		user = "git";
@@ -124,9 +129,13 @@ in
 		"/bin"
 		"/home/jhon/.bun/bin"
 		"/home/jhon/.local/bin"
+		"/home/jhon/.opencode/bin"
   	];
 	home.sessionVariables = {
 		GTK_USE_PORTAL = "1";
+		NIXOS_OZONE_WL = "1";
+		  DISPLAY = ":0";
+  XDG_SESSION_TYPE = "wayland";
 	};
 	gtk = {
   		enable = true;
@@ -143,7 +152,7 @@ in
 		enable = true;
 		shellAliases = {
 			update  = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#pc";
-			update-lp = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#laptop";
+				update-lp = "sudo nixos-rebuild switch --flake /home/jhon/dotfiles#laptop";
 			garbage = "sudo nix-collect-garbage -d";
 			zed = "zeditor";
 		};
@@ -165,12 +174,12 @@ in
 	#	enable = true;
 	#};
 	home.pointerCursor = {
-		gtk.enable = true;
+		enable = true;
 		package = pkgs.bibata-cursors;
 		name = "Bibata-Modern-Classic";
 		size = 24;
 
 	};
 
-	home.stateVersion = "25.11";
+	home.stateVersion = "26.05";
 }
